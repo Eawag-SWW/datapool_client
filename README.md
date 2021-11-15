@@ -1,5 +1,4 @@
 ## Description
-***
 This python package connects to the [datapool program](https://datapool.readthedocs.io/en/latest/#) developed by Eawag & SIS ETH Zurich.
 The package's api (*DataPool class*) represents the [database layout](https://datapool.readthedocs.io/en/latest/_images/DataModel.svg). 
 To query data from a table use like this:
@@ -8,11 +7,9 @@ datapool_instance.table_name.method()
 ```
 
 ## Requirements
-***
 You should have **Git** and **Python** (version 3.7 or greater) installed on your computer!
 
 ## Installation
-***
 
 **Using Git**
 
@@ -34,8 +31,7 @@ pip install <path-to-unpacked-repo>
 ```
 
 
-### Configure default connection to Datapool
-***
+## Configure default connection to Datapool
 
 In order to work efficiently you might want to provide default connection parameters to the datapool.
 That way, you do no need to provide the connection parameters everytime you use this package to access the databse.
@@ -88,8 +84,7 @@ set_defaults(
 > **Note:** Set multiple defaults by passing **instance** names.
 
 
-### Usage Examples
-***
+## Usage Examples
 
 ```python
 # import module
@@ -166,7 +161,7 @@ data, meta_data = pl.plot_signal_with_meta(
 # ... there's a lot more to discover
 ```
 
-### Attention
+## Attention
 
 In order to use the package with the whdp you must initialize the DataPool instance like so!
 
