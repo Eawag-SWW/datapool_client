@@ -188,3 +188,16 @@ whdp = DataPool(
 )
 ```
 Ps: There are a few limitations working with this package and the whdp.
+
+
+## Running Tests
+
+Install pytest and other dependencies.
+```shell
+pip install -r requirements_dev.txt
+```
+
+To run the tests enter the package directory and run:
+```shell
+pytest
+```
