@@ -1,13 +1,16 @@
 ## Description
-This python package connects to the [datapool program](https://datapool.readthedocs.io/en/latest/#) developed by Eawag & SIS ETH Zurich.
+This python package connects to the [datapool program](https://datapool.readthedocs.io/en/latest/#) developed by Eawag & ETH Zurich - SIS.
 The package's api (*DataPool class*) represents the [database layout](https://datapool.readthedocs.io/en/latest/_images/DataModel.svg). 
-To query data from a table use like this:
-```buildoutcfg
+So all "sub-instances" of the DataPool class represents a table in the database layout. To query data from a table use like this:
+
+```python
+from datapool_client import DataPool
+datapool_instance = DataPool()
 datapool_instance.table_name.method()
 ```
 
 ## Requirements
-You should have **Git** and **Python** (version 3.7 or greater) installed on your computer!
+You should have  **Python** (*version 3.9 or greater*) installed on your computer! **Git** is not a requirement, but it is recommended.
 
 ## Installation
 
@@ -34,13 +37,12 @@ pip install <path-to-unpacked-repo>
 ## Configure default connection to Datapool
 
 In order to work efficiently you might want to provide default connection parameters to the datapool.
-That way, you do no need to provide the connection parameters everytime you use this package to access the databse.
-First you have to get these parameters.
+That way, you do no need to provide the connection parameters everytime you use this package to access the database.
 
 ```python
 from datapool_client import set_defaults
 
-# connecion parameters (example)
+# connection parameters (example)
 instance = "DEFAULT"
 host = "ip.to.datapool.host"
 port = "5432"
@@ -48,7 +50,7 @@ database = "db_name"
 user = "db_user_name"
 password = "db_user_password"
 
-# this function sets the default paramaters programatically
+# this function sets the default parameters programmatically
 set_defaults(
     instance=instance, 
     host=host, 
@@ -59,7 +61,7 @@ set_defaults(
 )
 ```
 
-To overwrite (change) an already made entry you must pass the instance name and the overwrite-keyword!
+To overwrite (change) an already made entry you should pass the instance name and the overwrite-keyword!
 ```python
 from datapool_client import set_defaults
 
@@ -81,7 +83,7 @@ set_defaults(
 )
 ```
 
-> **Note:** Set multiple defaults by passing **instance** names.
+> **Note:** Set multiple defaults by passing **instance** names. Instance refers to a datapool instance, if you have multiple running.
 
 
 ## Usage Examples
@@ -105,10 +107,15 @@ dp = DataPool()
 ## )
 
 '''retrieve data 'low level', via sending sql queries your writing yourself.'''
-data_dict = dp.query("select * from site;")
+# run your own specific query, return native python data types
+data_dict = dp.query(
+    "select * from site;"
+)
 
 # run your own specific query, return a pandas dataframe
-data_dataframe = dp.query_df("select * from site;")
+data_dataframe = dp.query_df(
+    "select * from site;"
+)
 
 '''some predefined query examples'''
 # get the entire source table
@@ -180,4 +187,4 @@ whdp = DataPool(
     }
 )
 ```
-Ps: There're a few limitations working with this package and the whdp.
+Ps: There are a few limitations working with this package and the whdp.
