@@ -12,7 +12,7 @@ from pandas import DataFrame as _DataFrame
 from pandas import merge as _merge
 from pandas import read_csv as _read_csv
 
-from datapool_client.column_map import COLUMN_MAP
+from datapool_client.core.column_map import COLUMN_MAP
 from datapool_client.core.formatting import format_meta_data, reshape
 from datapool_client.core.utilities import (
     choose_arguments_connection_arguments,

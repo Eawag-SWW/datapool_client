@@ -1,6 +1,6 @@
 from datetime import datetime as _dt
 
-from datapool_client.column_map import COLUMN_MAP
+from datapool_client.core.column_map import COLUMN_MAP
 from datapool_client.core.config import _import_defaults
 from datapool_client import CONFIG_PATH
 

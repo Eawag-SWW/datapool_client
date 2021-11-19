@@ -5,7 +5,7 @@ import plotly.offline as py
 from pandas import isna
 from plotly.subplots import make_subplots
 
-from datapool_client.column_map import COLUMN_MAP
+from datapool_client.core.column_map import COLUMN_MAP
 
 
 def subdivide_comment(comment, limit=50):
