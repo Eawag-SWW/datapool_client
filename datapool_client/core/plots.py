@@ -107,12 +107,26 @@ def generate_meta_plot(
     plot_title="Signal Meta Plot",
     filename="meta_plot.html",
     auto_open=True,
-    inline=False
+    inline=False,
+    mark_via_key_word=None
 ):
+
+    if mark_via_key_word is None:
+        mark_via_key_word = {}
+
+    if len(mark_via_key_word) > 1:
+        raise ValueError("At the moment only one keyword is supported!")
 
     values = dataframe.values
 
+    max_spacer = 0.1
     mx = values.max()
+    top_annotation_position = mx * (1 + max_spacer) if mx > 0 else mx * (1 - max_spacer)
+
+    min_spacer = 0.05
+    mn = values.min()
+    bottom_annotation_position = mn * (1 - min_spacer) if abs(mn) < 1 else mn * (1 + min_spacer)
+
     meta_rows = meta.shape[0]
 
     annotations = []
@@ -150,7 +164,7 @@ def generate_meta_plot(
         annotations.append(
             dict(
                 x=row["start"],
-                y=mx*1.1,
+                y=top_annotation_position,
                 textangle=90,
                 ax=0,
                 ay=-20,
@@ -161,6 +175,27 @@ def generate_meta_plot(
                 arrowhead=1,
             )
         )
+
+        to_mark = []
+        for key, settings in mark_via_key_word.items():
+            if key in row_formatted:
+                to_mark.append(settings)
+
+        for color in to_mark:
+
+            annotations.append(
+                dict(
+                    x=row["start"],
+                    y=bottom_annotation_position,
+                    textangle=90,
+                    ax=0,
+                    ay=20,
+                    arrowcolor=color,
+                    arrowsize=1,
+                    arrowwidth=1.4,
+                    arrowhead=1,
+                )
+            )
 
     fig = make_subplots(
         rows=2,

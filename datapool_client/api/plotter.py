@@ -34,7 +34,7 @@ class Plot:
         Parameters
         ----------
         source_name:          str, specifying the name of the source instance
-        parameter_name:       str of parameter name
+        parameter_name:       str | list, of parameter name(s)
         start:                str, specifying a datetime ideally in the format yyyy-mm-dd HH:MM:SS
         end:                  str, specifying a datetime ideally in the format yyyy-mm-dd HH:MM:SS
         plot_dynamic:         bool, specifying whether to plot dynamically or statically
@@ -147,6 +147,7 @@ class Plot:
             "operational_malfunction": "#e5383b",
             "miscellaneous": "#ffbe0b",
         },
+        mark_via_key_word=None,
         minimal_meta_info_with_minutes=10,
         plot_title="Signal Meta Plot",
         filename="meta_plot.html",
@@ -158,13 +159,15 @@ class Plot:
         Parameters
         ----------
         source_name:                        Str, specifying the source name
-        parameter_name:                     Str, specifying the parameter name
+        parameter_name:                     str | list, of parameter name(s)
         site_name:                          Str, specifying the site name
         start:                              Str, specifying a datetime ideally in the format yyyy-mm-dd HH:MM:SS
         end:                                Str, specifying a datetime ideally in the format yyyy-mm-dd HH:MM:SS
         to_dataframe:                       bool, specifying whether the query output should be formatted as dataframe
         show_query:                         bool, specifying whether to print the query
-        color_encoding:                     Dict, specifying plot colors of log types
+        color_encoding:                     dict, specifying plot colors of log types
+        mark_via_key_word:                  dict, specifying a keyword to search in meta-string and color for annotating
+                                                  with an arrow on the bottom of the plot.
         minimal_meta_info_with_minutes:     Int, setting the minimal width of meta data area plots in minutes
         plot_title:                         Str, title for plot
         filename:                           Str, filename of plot.html if inline is False
@@ -242,6 +245,7 @@ class Plot:
             filename=filename,
             auto_open=auto_open,
             inline=inline,
+            mark_via_key_word=mark_via_key_word
         )
         if inline:
             return data, meta_data, fig

@@ -161,8 +161,20 @@ meta_data = dp.meta_data_history.get(
 from datapool_client import Plot
 # defaults should be set, or connection details must be provided
 pl = Plot()
+
+# minimal usage
 data, meta_data = pl.plot_signal_with_meta(
     source_name="your_source_name",
+)
+
+# more specific example
+data, meta_data = pl.plot_signal_with_meta(
+    source_name="your_source_name", 
+    start="2019-01-01", 
+    end="2021-08-01",
+    parameter_name=["parameter_name_1", "parameter_name_2"],
+    # generate additional annotation in color "green", if keyword "reference_measurement" is found 
+    mark_via_key_word={"reference_measurement": "green"}
 )
 
 # ... there's a lot more to discover
