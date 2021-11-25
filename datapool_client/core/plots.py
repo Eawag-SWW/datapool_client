@@ -9,6 +9,9 @@ from datapool_client.core.column_map import COLUMN_MAP
 
 
 def subdivide_comment(comment, limit=50):
+    if isna(comment):
+        return ""
+
     new_comment = ""
     for tag in comment.split(";"):
         new_tag = ""
@@ -72,7 +75,8 @@ def format_person(person):
 def format_additional_meta_info(add_info):
     additional_meta_info = ""
     for key, val in add_info.items():
-        additional_meta_info += f"{key}: {val}\n"
+        if not isna(val):
+            additional_meta_info += f"{key}: {val}\n"
     return f"{TITLE_NAMES['add_meta_info']}{additional_meta_info}"
 
 
@@ -103,7 +107,7 @@ def generate_meta_plot(
     plot_title="Signal Meta Plot",
     filename="meta_plot.html",
     auto_open=True,
-    inline=False,
+    inline=False
 ):
 
     values = dataframe.values
@@ -146,14 +150,14 @@ def generate_meta_plot(
         annotations.append(
             dict(
                 x=row["start"],
-                y=mx,
+                y=mx*1.1,
                 textangle=90,
                 ax=0,
                 ay=-20,
                 font=dict(color=color_encoding[row["log_type"]], size=12),
                 arrowcolor=color_encoding[row["log_type"]],
                 arrowsize=1,
-                arrowwidth=1,
+                arrowwidth=1.4,
                 arrowhead=1,
             )
         )
