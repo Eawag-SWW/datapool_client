@@ -18,11 +18,11 @@ You should have  **Python** (*version 3.9 or greater*) installed on your compute
 
 Option 1:
 ```shell 
-pip install git+https://gitlab.switch.ch/christian.foerster/datapool_client.git
+pip install git+https://github.com/Eawag-SWW/datapool_client.git
 ```
 Option 2:
 ```shell 
-git clone https://gitlab.switch.ch/christian.foerster/datapool_client.git
+git clone https://github.com/Eawag-SWW/datapool_client.git
 pip install datapool_client
 ```
 
