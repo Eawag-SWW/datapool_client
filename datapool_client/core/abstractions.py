@@ -665,9 +665,9 @@ class MetaDataHistory(DataPoolBaseTable):
                         meta_data_history.comment,
                         meta_data_history.additional_meta_info
                     FROM meta_data_history
-                    INNER JOIN meta_log_type ON meta_log_type.meta_log_type_id = meta_data_history.meta_log_type_id
-                    INNER JOIN meta_action_type ON meta_action_type.meta_action_type_id = meta_data_history.meta_action_type_id
-                    INNER JOIN meta_flag ON meta_flag.meta_flag_id = meta_data_history.meta_flag_id
+                    LEFT JOIN meta_log_type ON meta_log_type.meta_log_type_id = meta_data_history.meta_log_type_id
+                    LEFT JOIN meta_action_type ON meta_action_type.meta_action_type_id = meta_data_history.meta_action_type_id
+                    LEFT JOIN meta_flag ON meta_flag.meta_flag_id = meta_data_history.meta_flag_id
                     INNER JOIN meta_data ON meta_data.meta_data_id = meta_data_history.meta_data_id
                     INNER JOIN person ON person.person_id = meta_data_history.person_id
                     INNER JOIN source ON source.source_id = meta_data.source_id
