@@ -1164,8 +1164,7 @@ class Signal(DataPoolBaseTable):
             f"""
             WITH 
             {with_statement}
-            SELECT signal.timestamp, value, parameter.unit, parameter.name, source.name, source.serial,
-                source_type.name, site.name, quality.method, quality.flag  
+            SELECT signal.timestamp, value, parameter.unit, parameter.name, source.name, source.serial, source_type.name, site.name, quality.method, quality.flag  
                 FROM signal
                 INNER JOIN site ON signal.site_id = site.site_id
                 INNER JOIN parameter ON signal.parameter_id = parameter.parameter_id
@@ -1187,7 +1186,7 @@ class Signal(DataPoolBaseTable):
 
         if fast:
             to_replace = {
-                ", quality.method, quality.flag": "",
+                ", source.name, source.serial, source_type.name, site.name, quality.method, quality.flag": "",
                 "LEFT JOIN signals_signal_quality_association ON signals_signal_quality_association.signal_id = signal.signal_id": "",
                 "LEFT JOIN signal_quality ON signals_signal_quality_association.signal_quality_id = signal_quality.signal_quality_id": "",
                 "LEFT JOIN quality ON quality.quality_id = signal_quality.quality_id": "",

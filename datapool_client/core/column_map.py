@@ -46,10 +46,6 @@ COLUMN_MAP = {
         "value",
         "unit",
         "parameter",
-        "source",
-        "serial",
-        "source_type",
-        "site",
     ],
     "signal_newest": [
         "timestamp",
