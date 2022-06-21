@@ -137,7 +137,7 @@ class Connector:
             self._cur.execute(query_str, vrs)
             if allow_modifications:
                 self._conn.commit()
-            return {"descripton": self._cur.description, "data": self._cur.fetchall()}
+            return {"description": self._cur.description, "data": self._cur.fetchall()}
         except Exception as e:
             self._conn.rollback()
             self._close()
