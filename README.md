@@ -121,6 +121,9 @@ data_dataframe = dp.query_df(
 # get the entire source table
 my_sources = dp.source.all()
 
+# get the entire variable table
+my_variables = dp.variable.all()
+
 # get the special value definition of a source type
 source_type = "your_source_type_name"
 dp.special_value_definition.from_source_type(source_type)
@@ -140,10 +143,10 @@ ret_df = dp.signal.get(site_name=site)
 source = "your_source_name"
 start = "2018-07-11 00:00:00"
 end = "2018-07-11 23:55:00"
-parameter = "your_parameter_name"
+variable = "your_variable_name"
 data = dp.signal.get(
     source_name=source, 
-    parameter_name=parameter, 
+    variable_name=variable, 
     start=start, 
     end=end
 )
@@ -172,7 +175,7 @@ data, meta_data = pl.plot_signal_with_meta(
     source_name="your_source_name", 
     start="2019-01-01", 
     end="2021-08-01",
-    parameter_name=["parameter_name_1", "parameter_name_2"],
+    variable_name=["variable_name_1", "variable_name_2"],
     # generate additional annotation in color "green", if keyword "reference_measurement" is found 
     mark_via_key_word={"reference_measurement": "green"}
 )
@@ -182,25 +185,41 @@ data, meta_data = pl.plot_signal_with_meta(
 
 ## Attention
 
-In order to use the package with the whdp you must initialize the DataPool instance like so!
+A few of different versions of the datapool software exist. There are minor differences in naming between these versions.
+To be exact the *variable table* is called *parameter table* in some versions. 
+The latest and final decision was made to call the table **variable table**.
 
+If for some reason you are using an older version of the datapool, please use the following code to invoke a `DataPool` instance.
+This will replace the corresponding table and field names in the query before it is sent to the database.
+
+
+Default connection set:
+```python
+from datapool_client import DataPool
+
+dp = DataPool(
+    to_replace={
+        "variable": "parameter"
+    }
+)
+```
+
+No default connection set:
 ```python
 from datapool_client import DataPool
 
 # replace ... with your connection details!!
-whdp = DataPool(
+dp = DataPool(
     host="...",
-    port="5432",
+    port="...",
     database="...",
     user="...",
     password="...",
     to_replace={
-        "parameter": "variable"
+        "variable": "parameter"
     }
 )
 ```
-Ps: There are a few limitations working with this package and the whdp.
-
 
 ## Running Tests
 
