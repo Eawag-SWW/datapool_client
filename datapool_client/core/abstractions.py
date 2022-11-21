@@ -191,8 +191,8 @@ class DataPoolBaseTable(Connector):
         return self._query(query_str, None, to_dataframe, show_query, False)
 
 
-class Parameter(DataPoolBaseTable):
-    __table_name = "parameter"
+class Variable(DataPoolBaseTable):
+    __table_name = "variable"
 
     @property
     def rows(self):
@@ -221,12 +221,12 @@ class Parameter(DataPoolBaseTable):
         -------
         dp = DataPool()
         source_type = "Hach_Flo-Dar"
-        dp.parameter.from_source_type(source_type)
+        dp.variable.from_source_type(source_type)
 
         """
         query_str = dedent(
             f"""
-            WITH parameter_ids AS (
+            WITH variable_ids AS (
                 WITH source_ids AS (
                     WITH source_type_ids AS (
                         SELECT source_type_id::integer FROM source_type WHERE source_type.name = '{source_type}'
@@ -234,12 +234,12 @@ class Parameter(DataPoolBaseTable):
                     SELECT source_id::integer FROM source WHERE source_type_id = 
                     ANY(ARRAY(SELECT source_type_id::integer FROM source_type_ids))
                 )
-                SELECT DISTINCT parameter_id::integer FROM signal WHERE source_id = 
+                SELECT DISTINCT variable_id::integer FROM signal WHERE source_id = 
                 ANY(ARRAY(SELECT source_id::integer FROM source_ids))
             )
             
-            SELECT parameter.name FROM parameter
-            WHERE parameter.parameter_id = ANY(ARRAY(SELECT parameter_id::integer FROM parameter_ids))
+            SELECT variable.name FROM variable
+            WHERE variable.variable_id = ANY(ARRAY(SELECT variable_id::integer FROM variable_ids))
             """
         )
 
@@ -249,7 +249,7 @@ class Parameter(DataPoolBaseTable):
             to_dataframe,
             show_query,
             False,
-            COLUMN_MAP["parameter_from_source_type"],
+            COLUMN_MAP["variable_from_source_type"],
         )
 
     def from_all_sources(self, show_query=False):
@@ -265,12 +265,12 @@ class Parameter(DataPoolBaseTable):
         Example
         -------
         dp = DataPool()
-        dp.parameter.from_all_sources()
+        dp.variable.from_all_sources()
 
         """
 
         response = self._query(
-            "SELECT DISTINCT source_id, parameter_id FROM signal;",
+            "SELECT DISTINCT source_id, variable_id FROM signal;",
             None,
             True,
             show_query,
@@ -282,22 +282,22 @@ class Parameter(DataPoolBaseTable):
         source.set_index("source_id", inplace=True)
         source_map = source.to_dict()["name"]
 
-        parameter = self._query(
-            "SELECT parameter_id, name FROM parameter;", None, True, show_query, False
+        variable = self._query(
+            "SELECT variable_id, name FROM variable;", None, True, show_query, False
         )
-        parameter.set_index("parameter_id", inplace=True)
-        parameter_map = parameter.to_dict()["name"]
+        variable.set_index("variable_id", inplace=True)
+        variable_map = variable.to_dict()["name"]
 
         response.source_id.replace(source_map, inplace=True)
-        response.parameter_id.replace(parameter_map, inplace=True)
+        response.variable_id.replace(variable_map, inplace=True)
 
-        source_to_parameter = {}
+        source_to_variable = {}
         for _source in response.source_id.unique():
-            source_to_parameter[_source] = response[
+            source_to_variable[_source] = response[
                 response["source_id"] == _source
-                ].parameter_id.tolist()
+                ].variable_id.tolist()
 
-        return source_to_parameter
+        return source_to_variable
 
 
 class Site(DataPoolBaseTable):
@@ -739,11 +739,11 @@ class Source(DataPoolBaseTable):
     def all(self, to_dataframe=True, show_query=False):
         return self._all(self.__table_name, to_dataframe, show_query)
 
-    def from_parameter(self, parameter_name, to_dataframe=True, show_query=False):
+    def from_variable(self, variable_name, to_dataframe=True, show_query=False):
         """
         Parameters
         ----------
-        parameter_name:       str, with name of parameter
+        variable_name:       str, with name of variable
         to_dataframe:         bool, specifying whether the query output should be formatted as dataframe
         show_query:           bool, specifying whether to print the query
 
@@ -754,16 +754,16 @@ class Source(DataPoolBaseTable):
         Example
         -------
         dp = DataPool()
-        dp.source.from_parameter(source_name="my_parameter_name")
+        dp.source.from_variable(variable_name="my_variable_name")
         """
         query_str = dedent(
             f"""
-            WITH parameter_ids as (
-                SELECT parameter_id::integer FROM parameter WHERE parameter.name = '{parameter_name}'
+            WITH variable_ids as (
+                SELECT variable_id::integer FROM variable WHERE variable.name = '{variable_name}'
             ), source_ids as (
                 SELECT DISTINCT source_id::integer FROM signal 
-                WHERE signal.parameter_id IN (
-                    SELECT parameter_id::integer FROM parameter_ids
+                WHERE signal.variable_id IN (
+                    SELECT variable_id::integer FROM variable_ids
                 )
             )    
             SELECT source.name from source 
@@ -778,7 +778,7 @@ class Source(DataPoolBaseTable):
             to_dataframe,
             show_query,
             False,
-            COLUMN_MAP["source_from_parameter"],
+            COLUMN_MAP["source_from_variable"],
         )
 
     def from_project(self, project_name, to_dataframe=True, show_query=False):
@@ -980,7 +980,7 @@ class Signal(DataPoolBaseTable):
     def get_id(
             self,
             source_name,
-            parameter_name,
+            variable_name,
             start="1900-01-01 00:00:00",
             end=None,
             to_dataframe=True,
@@ -990,7 +990,7 @@ class Signal(DataPoolBaseTable):
         Parameters
         ----------
         source_name:          str with name of the source
-        parameter_name:       str with name of the parameter
+        variable_name:       str with name of the variable
         start:                str, specifying a datetime ideally in the format yyyy-mm-dd HH:MM:SS
         end:                  str, specifying a datetime ideally in the format yyyy-mm-dd HH:MM:SS
         to_dataframe:         bool, specifying whether the query output should be formatted as dataframe
@@ -1004,11 +1004,11 @@ class Signal(DataPoolBaseTable):
         -------
         dp = DataPool()
         source_name = "bf_f04_23_bahnhofstr"
-        parameter_name =
+        variable_name =
         start = "2016-06-22 12"        # zeros are automatically added
 
         # if end is not specified, all data up to now will be returned
-        dp.signal.get_id(source_name,parameter_name,start)
+        dp.signal.get_id(source_name,variable_name,start)
 
         """
 
@@ -1021,9 +1021,9 @@ class Signal(DataPoolBaseTable):
             f"""
             SELECT signal.timestamp, signal_id
             FROM signal 
-            INNER JOIN parameter ON signal.parameter_id = parameter.parameter_id
+            INNER JOIN variable ON signal.variable_id = variable.variable_id
             INNER JOIN source ON signal.source_id = source.source_id
-            WHERE parameter.name = '{parameter_name}' AND
+            WHERE variable.name = '{variable_name}' AND
             source.name = '{source_name}' AND
             '{st}'::timestamp <= signal.timestamp AND
             signal.timestamp <= '{en}'::timestamp
@@ -1044,7 +1044,7 @@ class Signal(DataPoolBaseTable):
             *,
             source_name=None,
             site_name=None,
-            parameter_name=None,
+            variable_name=None,
             source_type_name=None,
             start="1900-01-01 00:00:00",
             end=None,
@@ -1059,7 +1059,7 @@ class Signal(DataPoolBaseTable):
         ----------
         source_name:          str, of the source name
         site_name:            str, of the site name
-        parameter_name:       str, of the parameter name
+        variable_name:       str, of the variable name
         source_type_name:     str, of the source type name
         start:                str, specifying a datetime ideally in the format yyyy-mm-dd HH:MM:SS
         end:                  str, specifying a datetime ideally in the format yyyy-mm-dd HH:MM:SS
@@ -1077,18 +1077,18 @@ class Signal(DataPoolBaseTable):
         from datapool_client import DataPool
 
         dp = DataPool() # this only works when a default connection has been set!
-        df = dp.signal.get(source_name = "bn_r03_rub_morg", parameter_name="bucket content",
+        df = dp.signal.get(source_name = "bn_r03_rub_morg", variable_name="bucket content",
                            source_type_name="OttPluvioII",site_name="school_chatzenrainstr",start = "2019-11-28")
         """
         if (
                 (source_name is None)
                 and (site_name is None)
-                and (parameter_name is None)
+                and (variable_name is None)
                 and (source_type_name is None)
         ):
             raise ValueError(
                 "Please pass a filter! Choose at least one of those 'source_name', 'site_name', "
-                "'source_type_name', 'parameter_name'."
+                "'source_type_name', 'variable_name'."
             )
 
         if end is None:
@@ -1100,8 +1100,8 @@ class Signal(DataPoolBaseTable):
         source_filter = "\n"
         site_with = "\n"
         site_filter = "\n"
-        parameter_with = "\n"
-        parameter_filter = "\n"
+        variable_with = "\n"
+        variable_filter = "\n"
 
         if source_type_name is None:
 
@@ -1135,29 +1135,29 @@ class Signal(DataPoolBaseTable):
                 "signal.site_id = ANY(ARRAY(SELECT site_id::integer FROM site_ids))"
             )
 
-        if parameter_name is not None:
-            if not isinstance(parameter_name, list):
-                parameter_name = [parameter_name]
+        if variable_name is not None:
+            if not isinstance(variable_name, list):
+                variable_name = [variable_name]
 
-            parameters = f"""'{{"{'","'.join(parameter_name)}"}}'"""
+            variables = f"""'{{"{'","'.join(variable_name)}"}}'"""
 
-            parameter_with = (
-                "parameter_ids AS (SELECT parameter_id::integer FROM parameter "
-                f"WHERE parameter.name = ANY({parameters}))"
+            variable_with = (
+                "variable_ids AS (SELECT variable_id::integer FROM variable "
+                f"WHERE variable.name = ANY({variables}))"
             )
-            parameter_filter = "signal.parameter_id = ANY(ARRAY(SELECT parameter_id::integer FROM parameter_ids))"
+            variable_filter = "signal.variable_id = ANY(ARRAY(SELECT variable_id::integer FROM variable_ids))"
 
         with_statement = ",\n".join(
             [
                 statement
-                for statement in [source_with, site_with, parameter_with]
+                for statement in [source_with, site_with, variable_with]
                 if statement != "\n"
             ]
         )
         filter_statement = "AND\n".join(
             [
                 statement
-                for statement in [source_filter, site_filter, parameter_filter]
+                for statement in [source_filter, site_filter, variable_filter]
                 if statement != "\n"
             ]
         )
@@ -1166,10 +1166,10 @@ class Signal(DataPoolBaseTable):
             f"""
             WITH 
             {with_statement}
-            SELECT signal.timestamp, value, parameter.unit, parameter.name, source.name, source.serial, source_type.name, site.name, quality.method, quality.flag  
+            SELECT signal.timestamp, value, variable.unit, variable.name, source.name, source.serial, source_type.name, site.name, quality.method, quality.flag  
                 FROM signal
                 INNER JOIN site ON signal.site_id = site.site_id
-                INNER JOIN parameter ON signal.parameter_id = parameter.parameter_id
+                INNER JOIN variable ON signal.variable_id = variable.variable_id
                 INNER JOIN source ON signal.source_id = source.source_id
                 INNER JOIN source_type ON source.source_type_id = source_type.source_type_id
                 LEFT JOIN signals_signal_quality_association ON signals_signal_quality_association.signal_id = signal.signal_id
@@ -1239,7 +1239,7 @@ class Signal(DataPoolBaseTable):
             SELECT  timestamp, 
                     value, 
                     unit, 
-                    parameter_name, 
+                    variable_name, 
                     source_name, 
                     source_serial, 
                     source_type_name
@@ -1248,15 +1248,15 @@ class Signal(DataPoolBaseTable):
                                         signal.timestamp, 
                                         value, 
                                         unit, 
-                                        parameter.NAME                          AS parameter_name, 
+                                        variable.NAME                          AS variable_name, 
                                         source.NAME                             AS source_name, 
                                         source.serial                           AS source_serial, 
                                         source_type.NAME                        AS source_type_name
                                 FROM       signal 
                                 INNER JOIN site 
                                 ON         signal.site_id = site.site_id 
-                                INNER JOIN parameter 
-                                ON         signal.parameter_id = parameter.parameter_id 
+                                INNER JOIN variable 
+                                ON         signal.variable_id = variable.variable_id 
                                 INNER JOIN source 
                                 ON         signal.source_id = source.source_id 
                                 INNER JOIN source_type 
@@ -1266,7 +1266,7 @@ class Signal(DataPoolBaseTable):
             GROUP BY s.timestamp, 
                     s.value, 
                     s.signal_id, 
-                    s.parameter_name, 
+                    s.variable_name, 
                     s.unit, 
                     s.source_type_name, 
                     s.source_name, 
@@ -1374,12 +1374,12 @@ class Signal(DataPoolBaseTable):
             SELECT   timestamp, 
                     value, 
                     unit, 
-                    parameter.name, 
+                    variable.name, 
                     source_type.name, 
                     source.name 
             FROM     signal 
-            join     parameter 
-            ON       signal.parameter_id = parameter.parameter_id 
+            join     variable 
+            ON       signal.variable_id = variable.variable_id 
             join     source 
             ON       signal.source_id = source.source_id 
             join     source_type 
@@ -1544,7 +1544,7 @@ class Quality(DataPoolBaseTable):
                 ]
 
         signal_df = self.__signal.get_id(
-            self.source, self.parameter, self.start, self.end
+            self.source, self.variable, self.start, self.end
         )
 
         self.signals_signal_quality_association = _DataFrame(
@@ -1595,7 +1595,7 @@ class Quality(DataPoolBaseTable):
         return
 
     def add_quality_flag(
-            self, source, parameter, method, flags, start, end, author, ask=True
+            self, source, variable, method, flags, start, end, author, ask=True
     ):
         """
 
@@ -1604,8 +1604,8 @@ class Quality(DataPoolBaseTable):
         source : str
             specifying the source your adding flags for
 
-        parameter: str
-            specifying the parameter your adding flags for
+        variable: str
+            specifying the variable your adding flags for
 
         method : str
             specifying the quality method your adding the flags for
@@ -1631,7 +1631,7 @@ class Quality(DataPoolBaseTable):
         """
 
         self.source = source
-        self.parameter = parameter
+        self.variable = variable
         self.method = method
         self.flags = _array(flags)
         self.start, self.end = parse_dates(start, end)
@@ -1739,12 +1739,12 @@ class Quality(DataPoolBaseTable):
             )
             self.query(query, allow_modifications=True)
 
-    def delete_quality_flags(self, method, source, parameter, start, end):
+    def delete_quality_flags(self, method, source, variable, start, end):
         """
         This function deletes the signals_signal_quality_association entry of signal_id and signal_quality_id.
         :param method str with method name
         :param source str with source name
-        :param parameter str with parameter name
+        :param variable str with variable name
         :param start datetime with start date
         :param end datetime with end date
         :return:
@@ -1752,7 +1752,7 @@ class Quality(DataPoolBaseTable):
 
         s_ids = tuple(
             self.__signal.get_id(
-                source_name=source, parameter_name=parameter, start=start, end=end
+                source_name=source, variable_name=variable, start=start, end=end
             )["id"].to_list()
         )
 
@@ -1786,12 +1786,12 @@ class Quality(DataPoolBaseTable):
 
         return
 
-    def get_unflagged_signals(self, source_name, parameter_name):
+    def get_unflagged_signals(self, source_name, variable_name):
         """Creates list of unflagged signal ids.
 
             Args:
               source_name: name of the source to look for gaps in flagging.
-        parameter_name: name of the parameter to look for gaps in flagging.
+        variable_name: name of the variable to look for gaps in flagging.
 
             Returns:
               List of signal id without any flag.
@@ -1807,8 +1807,8 @@ class Quality(DataPoolBaseTable):
                 quality.flag 
             FROM signal
             
-            INNER JOIN parameter 
-            ON parameter.parameter_id = signal.parameter_id
+            INNER JOIN variable 
+            ON variable.variable_id = signal.variable_id
             INNER JOIN source 
             ON source.source_id = signal.source_id
             FULL OUTER JOIN signals_signal_quality_association 
@@ -1819,7 +1819,7 @@ class Quality(DataPoolBaseTable):
             ON quality.quality_id = signal_quality.quality_id
             
             WHERE source.name = '{source_name}'
-            AND parameter.name = '{parameter_name}'
+            AND variable.name = '{variable_name}'
             AND quality.flag IS NULL
             
             ORDER BY signal.timestamp ASC;

@@ -21,7 +21,7 @@ class ToolBox(Connector):
         result = self._query(query, to_dataframe=False, show_query=show_query)
         return result["data"][0][0]
 
-    def count_values_in_db_group_by_source_and_parameter(self, to_dataframe=True, show_query=False):
+    def count_values_in_db_group_by_source_and_variable(self, to_dataframe=True, show_query=False):
         """
         Parameters
         ----------
@@ -35,28 +35,28 @@ class ToolBox(Connector):
         Example
         -------
         tb = Toolbox()
-        tb.count_values_in_db_group_by_source_and_parameter()
+        tb.count_values_in_db_group_by_source_and_variable()
         """
         query = """
         WITH count_table AS (
             SELECT
-                count(parameter_id),
-                parameter_id,
+                count(variable_id),
+                variable_id,
                 source_id,
                 date_trunc('week', timestamp)
             FROM signal
             GROUP BY
                 date_trunc('week', timestamp),
-                parameter_id,
+                variable_id,
                 source_id
         )
         SELECT
             count_table.count AS value_count,
-            parameter.name AS parameter_name,
+            variable.name AS variable_name,
             source.name AS source_name,
             count_table.date_trunc AS date_trunc
         FROM count_table
-        INNER JOIN parameter ON parameter.parameter_id = count_table.parameter_id
+        INNER JOIN variable ON variable.variable_id = count_table.variable_id
         INNER JOIN source ON source.source_id = count_table.source_id
         order by date_trunc desc;
         """

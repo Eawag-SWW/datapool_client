@@ -8,7 +8,7 @@ from datapool_client.core.abstractions import (
     MetaFlag,
     MetaLogType,
     MetaPicture,
-    Parameter,
+    Variable,
     Person,
     Picture,
     Project,
@@ -44,7 +44,7 @@ class DataPool(DataPoolBaseDatabase):
             verbose=verbose,
         )
         super().__init__(**conn_details)
-        self.parameter = Parameter(**conn_details, check=False)
+        self.variable = Variable(**conn_details, check=False)
         self.signal = Signal(**conn_details, check=False)
         self.site = Site(**conn_details, check=False)
         self.source = Source(**conn_details, check=False)

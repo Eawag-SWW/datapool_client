@@ -20,7 +20,7 @@ class Plot:
     def plot_signal(
         self,
         source_name,
-        parameter_name=None,
+        variable_name=None,
         start="1900-01-01 00:00:00",
         end=None,
         plot_dynamic=True,
@@ -34,7 +34,7 @@ class Plot:
         Parameters
         ----------
         source_name:          str, specifying the name of the source instance
-        parameter_name:       str | list, of parameter name(s)
+        variable_name:        str | list, of variable name(s)
         start:                str, specifying a datetime ideally in the format yyyy-mm-dd HH:MM:SS
         end:                  str, specifying a datetime ideally in the format yyyy-mm-dd HH:MM:SS
         plot_dynamic:         bool, specifying whether to plot dynamically or statically
@@ -57,13 +57,13 @@ class Plot:
         # plotting everything from a source
         df=dp.signal.plot_signal("bt_dl927_164_luppmenweg")
 
-        # plotting one parameter of a source
+        # plotting one variable of a source
         df=dp.signal.plot_signal("bt_dl927_164_luppmenweg","battery voltage")
 
         # plotting between time
         df=dp.signal.plot_signal("bt_dl927_164_luppmenweg","battery voltage","2019-01-01","2019-01-07")
 
-        #plotting multiple parameters of a source
+        #plotting multiple variables of a source
         df=dp.signal.plot_signal("bt_dl927_164_luppmenweg",["SNR","battery voltage"])
 
 
@@ -108,7 +108,7 @@ class Plot:
 
         df = self.__dp.signal.get(
             source_name=source_name,
-            parameter_name=parameter_name,
+            variable_name=variable_name,
             start=start,
             end=end,
             show_query=show_query,
@@ -133,7 +133,7 @@ class Plot:
     def plot_signal_with_meta(
         self,
         *,
-        parameter_name=None,
+        variable_name=None,
         source_name=None,
         site_name=None,
         start="1900-01-01 00:00:00",
@@ -159,7 +159,7 @@ class Plot:
         Parameters
         ----------
         source_name:                        Str, specifying the source name
-        parameter_name:                     str | list, of parameter name(s)
+        variable_name:                     str | list, of variable name(s)
         site_name:                          Str, specifying the site name
         start:                              Str, specifying a datetime ideally in the format yyyy-mm-dd HH:MM:SS
         end:                                Str, specifying a datetime ideally in the format yyyy-mm-dd HH:MM:SS
@@ -185,7 +185,7 @@ class Plot:
         dp_plot = Plot() # this only works when a default connection has been set!
         data, meta = dp_plot.plot_with_meta(
             source_name="bl_dl320_597sbw_ara",
-            parameter_name="water_level",
+            variable_name="water_level",
             start="2017-02-01",
             end="2017-07-01",
         )
@@ -200,7 +200,7 @@ class Plot:
         data = self.__dp.signal.get(
             source_name=source_name,
             site_name=site_name,
-            parameter_name=parameter_name,
+            variable_name=variable_name,
             start=start,
             end=end,
             to_dataframe=to_dataframe,

@@ -23,16 +23,16 @@ def test_newest(setup_postgres, dp):
 
 def test_get(setup_postgres, dp):
     dp.signal.get(source_name="source_1_1")
-    dp.signal.get(parameter_name="parameter_1")
+    dp.signal.get(variable_name="variable_1")
     dp.signal.get(site_name="site_1")
     dp.signal.get(source_type_name="source_type_1")
-    dp.signal.get(source_name="source_1_1", parameter_name="parameter_1")
+    dp.signal.get(source_name="source_1_1", variable_name="variable_1")
     dp.signal.get(
-        source_name="source_1_1", parameter_name="parameter_1", site_name="site_1"
+        source_name="source_1_1", variable_name="variable_1", site_name="site_1"
     )
     dp.signal.get(
         source_name="source_1_1",
-        parameter_name="parameter_1",
+        variable_name="variable_1",
         site_name="site_1",
         source_type_name="source_type_1",
     )
@@ -48,21 +48,21 @@ def test_get_fast(setup_postgres, dp):
 
 def test_get_raw(setup_postgres, dp):
     dp.signal.get(source_name="source_1_1", to_dataframe=False)
-    dp.signal.get(parameter_name="parameter_1", to_dataframe=False)
+    dp.signal.get(variable_name="variable_1", to_dataframe=False)
     dp.signal.get(site_name="site_1", to_dataframe=False)
     dp.signal.get(source_type_name="source_type_1", to_dataframe=False)
     dp.signal.get(
-        source_name="source_1_1", parameter_name="parameter_1", to_dataframe=False
+        source_name="source_1_1", variable_name="variable_1", to_dataframe=False
     )
     dp.signal.get(
         source_name="source_1_1",
-        parameter_name="parameter_1",
+        variable_name="variable_1",
         site_name="site_1",
         to_dataframe=False,
     )
     dp.signal.get(
         source_name="source_1_1",
-        parameter_name="parameter_1",
+        variable_name="variable_1",
         site_name="site_1",
         source_type_name="source_type_1",
         to_dataframe=False,
@@ -71,14 +71,14 @@ def test_get_raw(setup_postgres, dp):
 
 def test_get_id(setup_postgres, dp):
     with pytest.raises(TypeError):
-        dp.signal.get_id(parameter_name="parameter_1")
+        dp.signal.get_id(variable_name="variable_1")
         dp.signal.get_id(source_name="source_1_1")
         dp.signal.get_id(start="2021-01-01")
         dp.signal.get_id(start="2021-01-01", end="2021-12-01")
-    dp.signal.get_id(source_name="source_1_1", parameter_name="parameter_1")
+    dp.signal.get_id(source_name="source_1_1", variable_name="variable_1")
     dp.signal.get_id(
         source_name="source_1_1",
-        parameter_name="parameter_1",
+        variable_name="variable_1",
         start="2021-01-01",
         end="2021-12-01",
     )

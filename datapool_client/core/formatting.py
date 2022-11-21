@@ -68,14 +68,14 @@ def reshape(dataframe: pd.DataFrame, only_values=True):
     dataframe.copy()
     if only_values:
         df = pd.pivot_table(
-            dataframe, values=["value"], index="timestamp", columns="parameter"
+            dataframe, values=["value"], index="timestamp", columns="variable"
         )
         df.columns = df.columns.droplevel()
         df.columns.name = ""
         return df
     else:
         values = pd.pivot_table(
-            dataframe, values="value", index="timestamp", columns="parameter"
+            dataframe, values="value", index="timestamp", columns="variable"
         )
 
         flags = pd.pivot_table(

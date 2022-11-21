@@ -19,7 +19,7 @@ def db_schema(db_engine):
         signal_id = Column(Integer, primary_key=True)
         timestamp = Column(DateTime)
         value = Column(REAL)
-        parameter_id = Column(Integer, ForeignKey("parameter.parameter_id"))
+        variable_id = Column(Integer, ForeignKey("variable.variable_id"))
         source_id = Column(Integer, ForeignKey("source.source_id"))
         site_id = Column(Integer, ForeignKey("site.site_id"))
 
@@ -35,9 +35,9 @@ def db_schema(db_engine):
         coord_y = Column(REAL)
         coord_z = Column(REAL)
 
-    class Parameter(base):
-        __tablename__ = "parameter"
-        parameter_id = Column(Integer, primary_key=True)
+    class Variable(base):
+        __tablename__ = "variable"
+        variable_id = Column(Integer, primary_key=True)
         name = Column(String)
         description = Column(String)
         unit = Column(String)
@@ -61,7 +61,7 @@ def db_schema(db_engine):
         __tablename__ = "binary_data"
         binary_data_id = Column(Integer, primary_key=True)
         data = Column(LargeBinary)
-        parameter_id = Column(Integer, ForeignKey("parameter.parameter_id"))
+        variable_id = Column(Integer, ForeignKey("variable.variable_id"))
         source_id = Column(Integer, ForeignKey("source.source_id"))
         site_id = Column(Integer, ForeignKey("site.site_id"))
 
@@ -69,7 +69,7 @@ def db_schema(db_engine):
         __tablename__ = "lab_result"
         lab_result_id = Column(Integer, primary_key=True)
         lab_identifier = Column(String)
-        parameter_id = Column(ForeignKey("parameter.parameter_id"))
+        variable_id = Column(ForeignKey("variable.variable_id"))
         sample_identifier = Column(String)
         filter_lab = Column(String)
         dilution_lab = Column(REAL)
@@ -205,7 +205,7 @@ def db_schema(db_engine):
     return (
         Site,
         Picture,
-        Parameter,
+        Variable,
         SourceType,
         SpecialValueDefinition,
         Project,

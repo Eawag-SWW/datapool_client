@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="datapool_client",
-    version="1.0",
+    version="1.1",
     description="Designed to access the datapool software developed by ETH Zurich - SIS and Eawag. "
                 "Find out more under https://datapool.readthedocs.io/en/latest/.",
     author="Christian Foerster",
