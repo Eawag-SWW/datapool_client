@@ -199,7 +199,7 @@ from datapool_client import DataPool
 
 dp = DataPool(
     to_replace={
-        "variable": "parameter"
+        "parameter": "variable"
     }
 )
 ```
@@ -216,7 +216,7 @@ dp = DataPool(
     user="...",
     password="...",
     to_replace={
-        "variable": "parameter"
+        "parameter": "variable"
     }
 )
 ```
