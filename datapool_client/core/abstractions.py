@@ -13,27 +13,25 @@ from pandas import merge as _merge
 from pandas import read_csv as _read_csv
 
 from datapool_client.core.column_map import COLUMN_MAP
-from datapool_client.core.formatting import format_meta_data, reshape
+from datapool_client.core.formatting import (format_meta_data, reshape,
+                                             reshape_full_site_query)
 from datapool_client.core.utilities import (
-    choose_arguments_connection_arguments,
-    clean_query_string,
-    parse_dates,
-    replace_in_query,
-)
+    choose_arguments_connection_arguments, clean_query_string, parse_dates,
+    replace_in_query)
 
 
 class Connector:
     def __init__(
-            self,
-            host=None,
-            port=None,
-            database=None,
-            user=None,
-            password=None,
-            instance=None,
-            check=True,
-            to_replace={},
-            verbose=True,
+        self,
+        host=None,
+        port=None,
+        database=None,
+        user=None,
+        password=None,
+        instance=None,
+        check=True,
+        to_replace={},
+        verbose=True,
     ):
         """
         Please provide the connection details.
@@ -86,17 +84,19 @@ class Connector:
                 print("You are successfully connected to the database!")
 
         except Exception as e:
-            print("Connection could not be established. Please check the connections data!")
+            print(
+                "Connection could not be established. Please check the connections data!"
+            )
             raise e
 
     def _query(
-            self,
-            query_str,
-            vrs=None,
-            to_dataframe=True,
-            show_query=False,
-            allow_modifications=False,
-            columns=(),
+        self,
+        query_str,
+        vrs=None,
+        to_dataframe=True,
+        show_query=False,
+        allow_modifications=False,
+        columns=(),
     ):
 
         query_str = clean_query_string(query_str, self._to_replace_in_query)
@@ -295,7 +295,7 @@ class Variable(DataPoolBaseTable):
         for _source in response.source_id.unique():
             source_to_variable[_source] = response[
                 response["source_id"] == _source
-                ].variable_id.tolist()
+            ].variable_id.tolist()
 
         return source_to_variable
 
@@ -314,11 +314,35 @@ class Site(DataPoolBaseTable):
     def all(self, to_dataframe=True, show_query=False):
         return self._all(self.__table_name, to_dataframe, show_query)
 
+    def full(self, to_dataframe=True, show_query=False):
+        query_str = dedent(
+            """
+            SELECT 
+                site.name,
+                site.description,
+                site_field.name AS site_field,
+                site_field_values.value AS site_field_value
+            FROM site_field_values
+            INNER JOIN site ON site.site_id = site_field_values.site_id
+            INNER JOIN site_field ON site_field.site_field_id = site_field_values.site_field_id
+            """
+        )
+
+        data = self._query(
+            query_str,
+            None,
+            to_dataframe,
+            show_query,
+            False,
+        )
+
+        return reshape_full_site_query(data)
+
     def get_img_count(self, to_dataframe=True, show_query=False):
         query_str = dedent(
             """
-            SELECT name, coord_x, coord_y, coord_z, street, postcode,
-            COUNT(picture.filename), site.description
+            SELECT name, 
+            COUNT(picture.filename)
             FROM site
             LEFT JOIN picture ON site.site_id = picture.site_id
             GROUP BY site.site_id       
@@ -373,6 +397,36 @@ class Site(DataPoolBaseTable):
             False,
             COLUMN_MAP["site_from_source"],
         )
+
+
+class SiteField(DataPoolBaseTable):
+    __table_name = "site_field"
+
+    @property
+    def rows(self):
+        return self._rows(self.__table_name)
+
+    @property
+    def columns(self):
+        return self._columns(self.__table_name)
+
+    def all(self, to_dataframe=True, show_query=False):
+        return self._all(self.__table_name, to_dataframe, show_query)
+
+
+class SiteFieldValues(DataPoolBaseTable):
+    __table_name = "site_field_values"
+
+    @property
+    def rows(self):
+        return self._rows(self.__table_name)
+
+    @property
+    def columns(self):
+        return self._columns(self.__table_name)
+
+    def all(self, to_dataframe=True, show_query=False):
+        return self._all(self.__table_name, to_dataframe, show_query)
 
 
 class Project(DataPoolBaseTable):
@@ -500,13 +554,13 @@ class MetaData(DataPoolBaseTable):
         return res
 
     def get(
-            self,
-            *,
-            source_name=None,
-            site_name=None,
-            format_data=True,
-            to_dataframe=True,
-            show_query=False,
+        self,
+        *,
+        source_name=None,
+        site_name=None,
+        format_data=True,
+        to_dataframe=True,
+        show_query=False,
     ):
         """
         Parameters
@@ -616,15 +670,15 @@ class MetaDataHistory(DataPoolBaseTable):
         return res
 
     def get(
-            self,
-            *,
-            source_name=None,
-            site_name=None,
-            start="1900-01-01 00:00:00",
-            end=None,
-            format_data=True,
-            to_dataframe=True,
-            show_query=False,
+        self,
+        *,
+        source_name=None,
+        site_name=None,
+        start="1900-01-01 00:00:00",
+        end=None,
+        format_data=True,
+        to_dataframe=True,
+        show_query=False,
     ):
         """
         Parameters
@@ -978,13 +1032,13 @@ class Signal(DataPoolBaseTable):
         return self._columns(self.__table_name)
 
     def get_id(
-            self,
-            source_name,
-            variable_name,
-            start="1900-01-01 00:00:00",
-            end=None,
-            to_dataframe=True,
-            show_query=False,
+        self,
+        source_name,
+        variable_name,
+        start="1900-01-01 00:00:00",
+        end=None,
+        to_dataframe=True,
+        show_query=False,
     ):
         """
         Parameters
@@ -1040,18 +1094,18 @@ class Signal(DataPoolBaseTable):
         )
 
     def get(
-            self,
-            *,
-            source_name=None,
-            site_name=None,
-            variable_name=None,
-            source_type_name=None,
-            start="1900-01-01 00:00:00",
-            end=None,
-            without_flags=True,
-            minimal=False,
-            to_dataframe=True,
-            show_query=False,
+        self,
+        *,
+        source_name=None,
+        site_name=None,
+        variable_name=None,
+        source_type_name=None,
+        start="1900-01-01 00:00:00",
+        end=None,
+        without_flags=True,
+        minimal=False,
+        to_dataframe=True,
+        show_query=False,
     ):
         """Arguments must be provided with keywords!
 
@@ -1081,10 +1135,10 @@ class Signal(DataPoolBaseTable):
                            source_type_name="OttPluvioII",site_name="school_chatzenrainstr",start = "2019-11-28")
         """
         if (
-                (source_name is None)
-                and (site_name is None)
-                and (variable_name is None)
-                and (source_type_name is None)
+            (source_name is None)
+            and (site_name is None)
+            and (variable_name is None)
+            and (source_type_name is None)
         ):
             raise ValueError(
                 "Please pass a filter! Choose at least one of those 'source_name', 'site_name', "
@@ -1198,7 +1252,9 @@ class Signal(DataPoolBaseTable):
             columns = COLUMN_MAP["signal_get_without_quality"]
 
         elif minimal and not without_flags:
-            to_replace = {", source.name, source.serial, source_type.name, site.name": ""}
+            to_replace = {
+                ", source.name, source.serial, source_type.name, site.name": ""
+            }
             query_str = dedent(replace_in_query(query_str, to_replace))
 
             columns = COLUMN_MAP["signal_get_minimal"]
@@ -1315,12 +1371,12 @@ class Signal(DataPoolBaseTable):
         )
 
     def from_site_with_rangecheck(
-            self,
-            site_name,
-            start="1900-01-01 00:00:00",
-            end=None,
-            to_dataframe=True,
-            show_query=False,
+        self,
+        site_name,
+        start="1900-01-01 00:00:00",
+        end=None,
+        to_dataframe=True,
+        show_query=False,
     ):
         """
         Parameters
@@ -1403,16 +1459,16 @@ class Quality(DataPoolBaseTable):
     __table_name = "quality"
 
     def __init__(
-            self,
-            host=None,
-            port=None,
-            database=None,
-            user=None,
-            password=None,
-            instance=None,
-            check=True,
-            to_replace={},
-            verbose=True,
+        self,
+        host=None,
+        port=None,
+        database=None,
+        user=None,
+        password=None,
+        instance=None,
+        check=True,
+        to_replace={},
+        verbose=True,
     ):
         super().__init__(
             host, port, database, user, password, instance, check, to_replace, verbose
@@ -1541,7 +1597,7 @@ class Quality(DataPoolBaseTable):
         for flag in self.flagset:
             match_quality_id_2_flag[self.flags == flag] = sig_qual_id[
                 self.quality_id.flag == flag
-                ]
+            ]
 
         signal_df = self.__signal.get_id(
             self.source, self.variable, self.start, self.end
@@ -1595,7 +1651,7 @@ class Quality(DataPoolBaseTable):
         return
 
     def add_quality_flag(
-            self, source, variable, method, flags, start, end, author, ask=True
+        self, source, variable, method, flags, start, end, author, ask=True
     ):
         """
 
@@ -1691,9 +1747,9 @@ class Quality(DataPoolBaseTable):
         self.quality_df["method"] = method
 
         if not _merge(
-                self.quality_df[["flag", "method"]],
-                quality_df[["flag", "method"]],
-                how="inner",
+            self.quality_df[["flag", "method"]],
+            quality_df[["flag", "method"]],
+            how="inner",
         ).empty:
             raise ValueError("This combination on method and flag already exists!")
 

@@ -45,7 +45,6 @@ def test_get_fast(setup_postgres, dp):
     ans4 = dp.signal.get(source_name="source_1_1", without_flags=True, minimal=False)
 
 
-
 def test_get_raw(setup_postgres, dp):
     dp.signal.get(source_name="source_1_1", to_dataframe=False)
     dp.signal.get(variable_name="variable_1", to_dataframe=False)

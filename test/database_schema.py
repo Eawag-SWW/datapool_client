@@ -1,13 +1,5 @@
-from sqlalchemy import (
-    JSON,
-    REAL,
-    Column,
-    DateTime,
-    ForeignKey,
-    Integer,
-    LargeBinary,
-    String,
-)
+from sqlalchemy import (JSON, REAL, Column, DateTime, ForeignKey, Integer,
+                        LargeBinary, String)
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -28,12 +20,18 @@ def db_schema(db_engine):
         site_id = Column(Integer, primary_key=True)
         name = Column(String)
         description = Column(String)
-        street = Column(String)
-        postcode = Column(String)
-        city = Column(String)
-        coord_x = Column(REAL)
-        coord_y = Column(REAL)
-        coord_z = Column(REAL)
+
+    class SiteField(base):
+        __tablename__ = "site_field"
+        site_field_id = Column(Integer, primary_key=True)
+        name = Column(String)
+
+    class SiteFieldValues(base):
+        __tablename__ = "site_field_values"
+        site_field_value_id = Column(Integer, primary_key=True)
+        site_id = Column(Integer, ForeignKey("site.site_id"))
+        site_field_id = Column(Integer, ForeignKey("site_field.site_field_id"))
+        value = Column(String)
 
     class Variable(base):
         __tablename__ = "variable"
@@ -204,6 +202,8 @@ def db_schema(db_engine):
     # IMPORTANT: return order is important for foreign key constraints
     return (
         Site,
+        SiteField,
+        SiteFieldValues,
         Picture,
         Variable,
         SourceType,

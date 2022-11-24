@@ -1,24 +1,14 @@
-from datapool_client.core.abstractions import (
-    BinaryData,
-    DataPoolBaseDatabase,
-    LabResult,
-    MetaActionType,
-    MetaData,
-    MetaDataHistory,
-    MetaFlag,
-    MetaLogType,
-    MetaPicture,
-    Variable,
-    Person,
-    Picture,
-    Project,
-    Quality,
-    Signal,
-    Site,
-    Source,
-    SourceType,
-    SpecialValueDefinition,
-)
+from datapool_client.core.abstractions import (BinaryData,
+                                               DataPoolBaseDatabase, LabResult,
+                                               MetaActionType, MetaData,
+                                               MetaDataHistory, MetaFlag,
+                                               MetaLogType, MetaPicture,
+                                               Person, Picture, Project,
+                                               Quality, Signal, Site,
+                                               SiteField, SiteFieldValues,
+                                               Source, SourceType,
+                                               SpecialValueDefinition,
+                                               Variable)
 
 
 class DataPool(DataPoolBaseDatabase):
@@ -47,6 +37,8 @@ class DataPool(DataPoolBaseDatabase):
         self.variable = Variable(**conn_details, check=False)
         self.signal = Signal(**conn_details, check=False)
         self.site = Site(**conn_details, check=False)
+        self.site_field = SiteField(**conn_details, check=False)
+        self.site_field_values = SiteFieldValues(**conn_details, check=False)
         self.source = Source(**conn_details, check=False)
         self.source_type = SourceType(**conn_details, check=False)
         self.special_value_definition = SpecialValueDefinition(

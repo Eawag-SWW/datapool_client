@@ -87,3 +87,17 @@ def reshape(dataframe: pd.DataFrame, only_values=True):
         )
         res = pd.concat([values, flags], axis=1)
         return res
+
+
+def reshape_full_site_query(data):
+
+    data = pd.pivot_table(
+        data,
+        values=["site_field_value"],
+        index=["name", "description"],
+        columns="site_field",
+        aggfunc=lambda x: x,
+    )
+    data.columns = data.columns.droplevel()
+    data.columns.name = ""
+    return data.reset_index()

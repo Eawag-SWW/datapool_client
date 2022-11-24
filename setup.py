@@ -4,7 +4,7 @@ setup(
     name="datapool_client",
     version="1.1",
     description="Designed to access the datapool software developed by ETH Zurich - SIS and Eawag. "
-                "Find out more under https://datapool.readthedocs.io/en/latest/.",
+    "Find out more under https://datapool.readthedocs.io/en/latest/.",
     author="Christian Foerster",
     author_email="christian.foerster@eawag.ch",
     license="MIT Licence",
@@ -22,7 +22,7 @@ setup(
         "plotly",
         "pyparsing==2.4.7",
         "sqlalchemy",
-        "tqdm"
+        "tqdm",
     ],
     keywords="datapool_client, eawag, postgres",
     packages=find_packages(),

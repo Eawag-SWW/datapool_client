@@ -21,7 +21,9 @@ class ToolBox(Connector):
         result = self._query(query, to_dataframe=False, show_query=show_query)
         return result["data"][0][0]
 
-    def count_values_in_db_group_by_source_and_variable(self, to_dataframe=True, show_query=False):
+    def count_values_in_db_group_by_source_and_variable(
+        self, to_dataframe=True, show_query=False
+    ):
         """
         Parameters
         ----------
@@ -60,8 +62,4 @@ class ToolBox(Connector):
         INNER JOIN source ON source.source_id = count_table.source_id
         order by date_trunc desc;
         """
-        return self._query(
-            query,
-            to_dataframe=to_dataframe,
-            show_query=show_query
-        )
+        return self._query(query, to_dataframe=to_dataframe, show_query=show_query)

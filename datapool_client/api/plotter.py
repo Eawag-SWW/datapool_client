@@ -1,14 +1,13 @@
-import pandas as pd
 import cufflinks as _cf
+import pandas as pd
 import plotly as _plotly
 from matplotlib import pyplot as _plt
 
 from datapool_client.api.api import DataPool
 from datapool_client.core.formatting import reshape
 from datapool_client.core.plots import generate_meta_plot
-from datapool_client.core.utilities import (
-    determine_additional_meta_info_columns_of_meta_data_history,
-)
+from datapool_client.core.utilities import \
+    determine_additional_meta_info_columns_of_meta_data_history
 
 _cf.go_offline()
 
@@ -245,7 +244,7 @@ class Plot:
             filename=filename,
             auto_open=auto_open,
             inline=inline,
-            mark_via_key_word=mark_via_key_word
+            mark_via_key_word=mark_via_key_word,
         )
         if inline:
             return data, meta_data, fig

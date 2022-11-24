@@ -79,8 +79,38 @@ DB_DATA = {
         },
     ],
     "site": [
-        {"site_id": "1", "name": "site_1", "description": "desc to p1"},
-        {"site_id": "2", "name": "site_2", "description": "desc to p1"},
+        {"site_id": "1", "name": "site_1", "description": "desc to s1"},
+        {"site_id": "2", "name": "site_2", "description": "desc to s2"},
+    ],
+    "site_field": [
+        {"site_field_id": "1", "name": "city"},
+        {"site_field_id": "2", "name": "country"},
+    ],
+    "site_field_values": [
+        {
+            "site_field_value_id": "1",
+            "site_id": "1",
+            "site_field_id": "1",
+            "value": "Zurich",
+        },
+        {
+            "site_field_value_id": "2",
+            "site_id": "1",
+            "site_field_id": "2",
+            "value": "Switzerland",
+        },
+        {
+            "site_field_value_id": "3",
+            "site_id": "2",
+            "site_field_id": "1",
+            "value": "Berlin",
+        },
+        {
+            "site_field_value_id": "4",
+            "site_id": "2",
+            "site_field_id": "2",
+            "value": "Germany",
+        },
     ],
     "source": [
         {
@@ -146,17 +176,17 @@ DB_DATA = {
             "name": "source_maintenance",
             "description": "desc",
         },
-{
+        {
             "meta_action_type_id": "2",
             "name": "source_installation",
             "description": "desc",
         },
-{
+        {
             "meta_action_type_id": "3",
             "name": "operational_malfunction",
             "description": "desc",
         },
-{
+        {
             "meta_action_type_id": "4",
             "name": "miscellaneous",
             "description": "desc",
@@ -165,8 +195,12 @@ DB_DATA = {
     "meta_log_type": [
         {"meta_log_type_id": "1", "name": "source_maintenance", "description": "desc"},
         {"meta_log_type_id": "2", "name": "source_installation", "description": "desc"},
-        {"meta_log_type_id": "3", "name": "operational_malfunction", "description": "desc"},
-        {"meta_log_type_id": "4", "name": "miscellaneous", "description": "desc"}
+        {
+            "meta_log_type_id": "3",
+            "name": "operational_malfunction",
+            "description": "desc",
+        },
+        {"meta_log_type_id": "4", "name": "miscellaneous", "description": "desc"},
     ],
     "meta_flag": [{"meta_flag_id": "1", "name": "log_flag_1", "description": "desc"}],
     "meta_picture": [],
@@ -227,7 +261,7 @@ DB_DATA = {
             "timestamp_end": "2000-01-01 24:00:00",
             "comment": "comment",
             "additional_meta_info": '[{"entry": 4}, {"entry_2": 88}]',
-        }
+        },
     ],
     "person": [
         {

@@ -108,7 +108,7 @@ def generate_meta_plot(
     filename="meta_plot.html",
     auto_open=True,
     inline=False,
-    mark_via_key_word=None
+    mark_via_key_word=None,
 ):
 
     if mark_via_key_word is None:
@@ -125,7 +125,9 @@ def generate_meta_plot(
 
     min_spacer = 0.05
     mn = values.min()
-    bottom_annotation_position = mn * (1 - min_spacer) if abs(mn) < 1 else mn * (1 + min_spacer)
+    bottom_annotation_position = (
+        mn * (1 - min_spacer) if abs(mn) < 1 else mn * (1 + min_spacer)
+    )
 
     meta_rows = meta.shape[0]
 
@@ -213,7 +215,7 @@ def generate_meta_plot(
                 x=dataframe.index,
                 y=dataframe[param].values,
                 name=param,
-                #line=dict(color=line_color, width=1.5),
+                # line=dict(color=line_color, width=1.5),
             ),
             row=1,
             col=1,

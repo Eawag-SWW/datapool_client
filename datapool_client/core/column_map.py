@@ -1,15 +1,6 @@
 COLUMN_MAP = {
     "variable_from_source_type": ["value"],
-    "site_all_img_count": [
-        "name",
-        "coord_x",
-        "coord_y",
-        "coord_z",
-        "street",
-        "postcode",
-        "n_images",
-        "description",
-    ],
+    "site_all_img_count": ["name", "n_images"],
     "site_from_source": ["site"],
     "meta_data_get": ["source", "site", "description", "additional_meta_info"],
     "meta_data_history_get": [

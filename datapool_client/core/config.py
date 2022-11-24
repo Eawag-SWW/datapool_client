@@ -5,7 +5,6 @@ from sqlalchemy import create_engine
 
 from datapool_client import CONFIG_PATH
 
-
 DEFAULT_INSTANCE_NAME = "DEFAULT"
 
 
@@ -60,16 +59,16 @@ def test_connection(host, port, user, password, database):
 
 
 def set_defaults(
-        *,
-        host,
-        port,
-        database,
-        user,
-        password,
-        instance=DEFAULT_INSTANCE_NAME,
-        overwrite=False,
-        test_conn=True,
-        filepath=CONFIG_PATH
+    *,
+    host,
+    port,
+    database,
+    user,
+    password,
+    instance=DEFAULT_INSTANCE_NAME,
+    overwrite=False,
+    test_conn=True,
+    filepath=CONFIG_PATH,
 ):
     """
     Description
@@ -118,7 +117,7 @@ def set_defaults(
                 raise ValueError(message)
 
             elif instance in config.sections() + [DEFAULT_INSTANCE_NAME]:
-                message += ', '.join(config.sections())
+                message += ", ".join(config.sections())
                 if config.defaults():
                     message += f", {DEFAULT_INSTANCE_NAME}"
                 raise ValueError(message)
@@ -130,8 +129,6 @@ def set_defaults(
         config[instance] = connection_details
 
     if test_conn:
-        test_connection(
-           **connection_details
-        )
+        test_connection(**connection_details)
 
     write_config(filepath, config)

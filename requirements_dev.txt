@@ -1,3 +1,4 @@
 pytest
 pytest-postgresql==3.1.2
 black
+isort
