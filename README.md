@@ -185,18 +185,37 @@ data, meta_data = pl.plot_signal_with_meta(
 
 ## Attention
 
-A few of different versions of the datapool software exist. There are minor differences in naming between these versions.
+A few of different versions of the *datapool* & *datapool_client* software exist. 
+The name of a table differs between these versions.
 To be exact the *variable table* is called *parameter table* in some versions. 
-The latest and final decision was made to call the table **variable table**.
+The latest and final decision was made to call the table **variable table**. 
+So that the most up-to-date versions of the datapool (v3.0) and this package (v.1.1) rely 
+on the *variable table* instead of the *parameter_table*.
 
-If for some reason you are using an older version of the datapool, please use the following code to invoke a `DataPool` instance.
-This will replace the corresponding table and field names in the query before it is sent to the database.
+In order to keep the *datapool_client* package compatible with all versions of the datapool,
+parts of a query can be replaced before it is sent to the database.
+This can be used to address the changed names and fields in the database schema.
 
+Use the `to_replace` argument can be used to either replace the *parameter* with *variable* 
+or vice versa.
 
-Default connection set:
+For instance: To work with the latest version of the *datapool_client* and an older version 
+of the *datapool* you would want to invoke the DataPool instance like that:
 ```python
 from datapool_client import DataPool
+# default connection set
+dp = DataPool(
+    to_replace={
+        "variable": "parameter"
+    }
+)
+```
 
+While if you work with an older version of the *client* and the latest version 
+of the *datapool* use:
+```python
+from datapool_client import DataPool
+# default connection set
 dp = DataPool(
     to_replace={
         "parameter": "variable"
@@ -204,22 +223,7 @@ dp = DataPool(
 )
 ```
 
-No default connection set:
-```python
-from datapool_client import DataPool
-
-# replace ... with your connection details!!
-dp = DataPool(
-    host="...",
-    port="...",
-    database="...",
-    user="...",
-    password="...",
-    to_replace={
-        "parameter": "variable"
-    }
-)
-```
+If both programs are on the latest versions no replacement is need and the keyword can be omitted.
 
 ## Running Tests
 
