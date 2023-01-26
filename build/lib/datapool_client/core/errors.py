@@ -1,2 +1,0 @@
-class WritingDefaultError(Exception):
-    pass
