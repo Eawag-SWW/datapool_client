@@ -86,7 +86,7 @@ DB_DATA = {
         {"site_field_id": "1", "name": "city"},
         {"site_field_id": "2", "name": "country"},
     ],
-    "site_field_values": [
+    "site_field_value": [
         {
             "site_field_value_id": "1",
             "site_id": "1",

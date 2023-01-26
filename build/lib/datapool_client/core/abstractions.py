@@ -321,10 +321,10 @@ class Site(DataPoolBaseTable):
                 site.name,
                 site.description,
                 site_field.name AS site_field,
-                site_field_values.value AS site_field_value
-            FROM site_field_values
-            INNER JOIN site ON site.site_id = site_field_values.site_id
-            INNER JOIN site_field ON site_field.site_field_id = site_field_values.site_field_id
+                site_field_value.value AS site_field_value
+            FROM site_field_value
+            INNER JOIN site ON site.site_id = site_field_value.site_id
+            INNER JOIN site_field ON site_field.site_field_id = site_field_value.site_field_id
             """
         )
 
@@ -415,7 +415,7 @@ class SiteField(DataPoolBaseTable):
 
 
 class SiteFieldValues(DataPoolBaseTable):
-    __table_name = "site_field_values"
+    __table_name = "site_field_value"
 
     @property
     def rows(self):

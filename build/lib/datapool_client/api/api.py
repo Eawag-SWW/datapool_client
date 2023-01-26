@@ -38,7 +38,7 @@ class DataPool(DataPoolBaseDatabase):
         self.signal = Signal(**conn_details, check=False)
         self.site = Site(**conn_details, check=False)
         self.site_field = SiteField(**conn_details, check=False)
-        self.site_field_values = SiteFieldValues(**conn_details, check=False)
+        self.site_field_value = SiteFieldValues(**conn_details, check=False)
         self.source = Source(**conn_details, check=False)
         self.source_type = SourceType(**conn_details, check=False)
         self.special_value_definition = SpecialValueDefinition(

@@ -27,7 +27,7 @@ def db_schema(db_engine):
         name = Column(String)
 
     class SiteFieldValues(base):
-        __tablename__ = "site_field_values"
+        __tablename__ = "site_field_value"
         site_field_value_id = Column(Integer, primary_key=True)
         site_id = Column(Integer, ForeignKey("site.site_id"))
         site_field_id = Column(Integer, ForeignKey("site_field.site_field_id"))

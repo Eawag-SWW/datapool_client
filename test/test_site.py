@@ -18,5 +18,5 @@ def test_site_field_all(setup_postgres, dp):
     dp.site_field.all()
 
 
-def test_site_field_values_all(setup_postgres, dp):
-    dp.site_field_values.all()
+def test_site_field_value_all(setup_postgres, dp):
+    dp.site_field_value.all()
